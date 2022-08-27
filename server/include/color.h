@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <optional>
+#include "day_part.h"
 
 namespace smart_led {
     struct RGBColor {
@@ -16,8 +17,15 @@ namespace smart_led {
     };
 
     struct Color {
+    public:
         std::optional<RGBColor> rgb = std::nullopt;
         std::optional<uint8_t> white = std::nullopt;
+
+        static Color daylight();
+
+        static Color evening();
+
+        static Color night();
     };
 }
 

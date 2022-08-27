@@ -20,6 +20,8 @@ add_library(Pi2C STATIC ${pi2c_source_SOURCE_DIR}/pi2c.cpp)
 add_executable(smart_led
         src/main.cpp
         src/arduino.cpp
+        src/color.cpp
+        src/day_part.cpp
         )
 target_include_directories(smart_led
         PRIVATE

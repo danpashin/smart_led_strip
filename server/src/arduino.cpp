@@ -40,7 +40,10 @@ bool Arduino::SetColor(Color &color) {
 
     if (color.rgb) {
         msg.length += 3;
-        memcpy(msg.payload, &*color.rgb, sizeof(RGBColor));
+        RGBColor rgb = *color.rgb;
+        msg.payload[0] = rgb.red;
+        msg.payload[1] = rgb.green;
+        msg.payload[2] = rgb.blue;
     }
 
     if (color.white) {
@@ -54,4 +57,28 @@ bool Arduino::SetColor(Color &color) {
     }
 
     return this->RequestIsOk();
+}
+
+bool Arduino::SetDayPartColor(bool force) noexcept(false) {
+    DayPart curDayPart = CurrentDayPart();
+    if (curDayPart == this->dayPart && !force) {
+        return true;
+    }
+    this->dayPart = curDayPart;
+
+    Color color;
+    switch (CurrentDayPart()) {
+        case Morning:
+        case Day:
+            color = Color::daylight();
+            break;
+        case Evening:
+            color = Color::evening();
+            break;
+        case Night:
+            color = Color::night();
+            break;
+    }
+
+    return this->SetColor(color);
 }

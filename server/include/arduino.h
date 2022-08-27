@@ -22,8 +22,12 @@ namespace smart_led {
 
         bool SetColor(Color &color) noexcept(false);
 
+        bool SetDayPartColor(bool force) noexcept(false);
+
     protected:
         Pi2c bus;
+
+        DayPart dayPart;
 
         bool RequestIsOk() noexcept(false);
     };
