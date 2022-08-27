@@ -9,7 +9,7 @@
 #include <optional>
 
 namespace smart_led {
-    enum Command {
+    enum Command : uint8_t {
         UNDEFINED = 0,
         HELLO_QUERY = 2,
         SUCCESS,
@@ -18,10 +18,9 @@ namespace smart_led {
 
     struct Message {
         // size of message in bytes. Default is the size of header.
-        uint8_t length = sizeof(uint8_t) + 1;
-        Command command: 8 = UNDEFINED;
-
-        uint8_t payload[30];
+        uint8_t length = sizeof(uint8_t) * 2;
+        Command command = UNDEFINED;
+        uint8_t payload[30]{};
     };
 }
 

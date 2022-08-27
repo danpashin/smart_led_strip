@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(smart_led)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
 set(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
 set(CMAKE_SYSROOT /usr/aarch64-linux-gnu)
