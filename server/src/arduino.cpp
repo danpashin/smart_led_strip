@@ -9,7 +9,7 @@ using namespace smart_led;
 
 Arduino::Arduino(uint8_t address)
         : bus(Pi2c(static_cast<int>(address), false)),
-          address(address) {
+          _address(address) {
 }
 
 bool Arduino::RequestIsOk() noexcept(false) {
@@ -69,6 +69,8 @@ bool Arduino::SetDayPartColor(bool force) noexcept(false) {
     Color color;
     switch (CurrentDayPart()) {
         case Morning:
+            color = Color::morning();
+            break;
         case Day:
             color = Color::daylight();
             break;
@@ -81,4 +83,8 @@ bool Arduino::SetDayPartColor(bool force) noexcept(false) {
     }
 
     return this->SetColor(color);
+}
+
+uint8_t Arduino::address() const {
+    return this->_address;
 }

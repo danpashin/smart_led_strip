@@ -14,8 +14,6 @@ namespace smart_led {
 
     struct Arduino {
     public:
-        uint8_t address;
-
         explicit Arduino(uint8_t address);
 
         bool CheckConnect() noexcept(false);
@@ -24,7 +22,10 @@ namespace smart_led {
 
         bool SetDayPartColor(bool force) noexcept(false);
 
+        uint8_t address() const;
+
     protected:
+        uint8_t _address;
         Pi2c bus;
 
         DayPart dayPart;

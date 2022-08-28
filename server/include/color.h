@@ -21,6 +21,8 @@ namespace smart_led {
         std::optional<RGBColor> rgb = std::nullopt;
         std::optional<uint8_t> white = std::nullopt;
 
+        static Color morning();
+
         static Color daylight();
 
         static Color evening();

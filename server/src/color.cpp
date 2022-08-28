@@ -5,12 +5,23 @@
 
 using namespace smart_led;
 
+Color Color::morning() {
+    return Color{
+            .rgb = RGBColor{
+                    .red = 150,
+                    .green = 35,
+                    .blue = 2
+            },
+            .white = 0,
+    };
+}
+
 Color Color::daylight() {
     return Color{
             .rgb = RGBColor{
                     .red = 255,
                     .green = 80,
-                    .blue = 6
+                    .blue = 7
             },
             .white = 255,
     };
@@ -30,11 +41,11 @@ Color Color::evening() {
 Color Color::night() {
     return Color{
             .rgb = RGBColor{
-                    .red = 1,
+                    .red = 0,
                     .green = 0,
                     .blue = 0
             },
-            .white = 1,
+            .white = 0,
     };
 }
 
