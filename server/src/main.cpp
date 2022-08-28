@@ -3,7 +3,11 @@
 //
 
 #include <iostream>
+#include <vector>
+#include <thread>
+
 #include "arduino.h"
+#include "oping.h"
 
 using namespace smart_led;
 
@@ -34,8 +38,42 @@ using namespace smart_led;
     } while (true);
 }
 
+static void CheckDevices(Arduino &arduino) {
+    pingobj_t *pinger = ping_construct();
+
+    const std::vector<const char *> hosts{
+            "192.168.31.135", "192.168.31.136", "192.168.31.137"
+    };
+
+    do {
+        bool success = false;
+
+        for (auto host: hosts) {
+            if (ping_host_add(pinger, host) != 0) {
+                continue;
+            }
+
+            const int pings = ping_send(pinger);
+            ping_host_remove(pinger, host);
+
+            success = pings > 0;
+            std::cout << host << " is " << (success ? "online" : "offline") << std::endl;
+            if (success) {
+                break;
+            }
+        }
+        arduino.SetAnyoneAtHome(success);
+
+        sleep(60);
+    } while (true);
+}
+
 int main() {
     Arduino arduino = Arduino(0x8);
+
+    std::thread pingThread(CheckDevices, std::ref(arduino));
+    pingThread.detach();
+
     performOperations(arduino);
 
     return EXIT_SUCCESS;

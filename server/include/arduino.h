@@ -6,6 +6,8 @@
 #define SMART_LED_ARDUINO_H
 
 #include <cinttypes>
+#include <shared_mutex>
+
 #include "pi2c.h"
 #include "message.h"
 #include "color.h"
@@ -18,19 +20,29 @@ namespace smart_led {
 
         bool CheckConnect() noexcept(false);
 
-        bool SetColor(Color &color) noexcept(false);
+        bool SetColor(Color color) noexcept(false);
 
         bool SetDayPartColor(bool force) noexcept(false);
 
-        uint8_t address() const;
+        [[nodiscard]] uint8_t address() const;
+
+        void SetAnyoneAtHome(bool anyoneAtHome);
+
+        bool AnyoneAtHome();
 
     protected:
         uint8_t _address;
-        Pi2c bus;
+        Pi2c _bus;
 
-        DayPart dayPart;
+        mutable DayPart dayPart = DayPart::Night;
+
+        mutable std::shared_mutex _mutex;
+
+        mutable bool _anyoneAtHome = true;
+        mutable bool _cachedAnyoneAtHome = true;
 
         bool RequestIsOk() noexcept(false);
+
     };
 }
 

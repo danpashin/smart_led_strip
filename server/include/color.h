@@ -28,6 +28,8 @@ namespace smart_led {
         static Color evening();
 
         static Color night();
+
+        static Color vantaBlack();
     };
 }
 

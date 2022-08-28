@@ -49,3 +49,13 @@ Color Color::night() {
     };
 }
 
+Color Color::vantaBlack() {
+    return Color{
+            .rgb = RGBColor{
+                    .red = 0,
+                    .green = 0,
+                    .blue = 0
+            },
+            .white = 0,
+    };
+}
