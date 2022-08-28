@@ -1,3 +1,9 @@
+//
+// Created by danpashin on 8/28/22.
+//
+
+#ifndef SMART_LED_MESSAGE_H
+#define SMART_LED_MESSAGE_H
 
 enum Command : uint8_t {
   COMMAND_UNDEFINED,
@@ -15,3 +21,5 @@ struct Message {
     return sizeof(uint8_t) + sizeof(Command);
   }
 };
+
+#endif //SMART_LED_MESSAGE_H

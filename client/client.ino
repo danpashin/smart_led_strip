@@ -1,3 +1,7 @@
+//
+// Created by danpashin on 8/26/22.
+//
+
 #include<Wire.h>
 
 #include "color.h"
@@ -30,28 +34,24 @@ void setup() {
 
 void loop() { }
 
-static void I2CReceiveCallback(int bytes_received) {
-  SerialPrintf("bytes_received: %i", bytes_received);
+static void I2CReceiveCallback(int bytesReceived) {
+  SerialPrintf("bytes_received: %i", bytesReceived);
 
-  Message *msg = &request;
-  uint8_t *buffer_ptr = (uint8_t *)msg;
-  int bytes_read = 0;
+  uint8_t *bufferPtr = (uint8_t *)&request;
+  int bytesRead = 0;
   
-  while (Wire.available() && (++bytes_read <= bytes_received)) {
-    *buffer_ptr++ = Wire.read();
-//    SerialPrintf("Read byte %i", bytes_read);
+  while (Wire.available() && (++bytesRead <= bytesReceived)) {
+    *bufferPtr++ = Wire.read();
   }
 
-//  SerialPrintf("Payload len is %i", msg->len);
-
-  process_message(request);
+  ProcessMessage(request);
 }
 
 static void I2CRequestCallback() {
   Wire.write((uint8_t *)&response, Message::HeaderLength() + response.len);
 }
 
-static void process_message(Message message) {
+static void ProcessMessage(Message message) {
   switch (message.command) {
     case COMMAND_HELLO:
       response.len = 0;

@@ -1,3 +1,9 @@
+//
+// Created by danpashin on 8/28/22.
+//
+
+#ifndef SMART_LED_COLOR_H
+#define SMART_LED_COLOR_H
 
 struct Color {
   struct RGBColor {
@@ -7,3 +13,6 @@ struct Color {
   } rgb;
   uint8_t white;
 };
+
+
+#endif //SMART_LED_COLOR_H
