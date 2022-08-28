@@ -21,6 +21,7 @@ using namespace smart_led;
             }
 
             arduino.SetDayPartColor(wasOffline);
+            wasOffline = false;
         } catch (std::runtime_error &ex) {
             std::cerr << "got runtime exception, ignoring... " << ex.what() << std::endl;
 

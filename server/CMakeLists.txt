@@ -44,7 +44,7 @@ target_link_libraries(smart_led Pi2C)
 set(FPM_ARGS
         --input-type dir
         --output-type pacman
-        --log debug
+        --log error
         --name ${PROJECT_NAME}
         --maintainer ${PROJECT_AUTHOR}
         --description "${PROJECT_DESCRIPTION}"
