@@ -1,0 +1,11 @@
+[Unit]
+Description=Raspberry PI server to control arduino led strip
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/smart_led
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
