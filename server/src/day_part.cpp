@@ -12,11 +12,11 @@ DayPart smart_led::CurrentDayPart() {
     tm *local_time = localtime(&timestamp);
     const int hour = local_time->tm_hour;
 
-    if (hour >= 7 && hour <= 9) {
+    if (hour >= 7 && hour <= 8) {
         return DayPart::Morning;
     }
 
-    if (hour >= 10 && hour <= 19) {
+    if (hour >= 9 && hour <= 19) {
         return DayPart::Day;
     }
 
