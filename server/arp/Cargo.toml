@@ -1,0 +1,20 @@
+[package]
+name = "arp"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib", "lib"]
+
+[profile.release]
+codegen-units = 1
+panic = 'abort'
+lto = true
+strip = true
+
+[dependencies]
+arp-toolkit = { version = "0.3", features = ["sync"] }
+safer-ffi = "0.0.10"
+
+[features]
+headers = ["safer-ffi/headers"]

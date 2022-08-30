@@ -7,7 +7,7 @@
 #include <thread>
 
 #include "arduino.h"
-#include "oping.h"
+#include "arp.h"
 
 using namespace smart_led;
 
@@ -38,40 +38,36 @@ using namespace smart_led;
     } while (true);
 }
 
-static void CheckDevices(Arduino &arduino) {
-    pingobj_t *pinger = ping_construct();
-
-    const std::vector<const char *> hosts{
+static void SendARPRequests(Arduino &arduino) {
+    std::vector<const char *> hosts{
             "192.168.31.135", "192.168.31.136", "192.168.31.137"
     };
+    slice_mut_char_const_ptr hosts_slice{hosts.data(), hosts.size()};
 
-    do {
-        bool success = false;
+    int failsCount = 0;
 
-        for (auto host: hosts) {
-            if (ping_host_add(pinger, host) != 0) {
-                continue;
-            }
-
-            const int pings = ping_send(pinger);
-            ping_host_remove(pinger, host);
-
-            success = pings > 0;
-            std::cout << host << " is " << (success ? "online" : "offline") << std::endl;
-            if (success) {
-                break;
+    while (true) {
+        bool found = arp_ping_multiple(hosts_slice, 10);
+        if (found) {
+            failsCount = 0;
+            arduino.SetAnyoneAtHome(true);
+        } else {
+            failsCount++;
+            
+            if (failsCount > 10) {
+                failsCount = 0;
+                arduino.SetAnyoneAtHome(false);
             }
         }
-        arduino.SetAnyoneAtHome(success);
 
-        sleep(60);
-    } while (true);
+        sleep(180);
+    }
 }
 
 int main() {
-    Arduino arduino = Arduino(0x8);
+    auto arduino = Arduino(0x8);
 
-    std::thread pingThread(CheckDevices, std::ref(arduino));
+    std::thread pingThread(SendARPRequests, std::ref(arduino));
     pingThread.detach();
 
     performOperations(arduino);
