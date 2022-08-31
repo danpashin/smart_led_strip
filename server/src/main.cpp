@@ -38,7 +38,7 @@ using namespace smart_led;
     } while (true);
 }
 
-static void SendARPRequests(Arduino &arduino) {
+[[noreturn]] static void SendARPPings(Arduino &arduino) {
     std::vector<const char *> hosts{
             "192.168.31.135", "192.168.31.136", "192.168.31.137"
     };
@@ -53,21 +53,21 @@ static void SendARPRequests(Arduino &arduino) {
             arduino.SetAnyoneAtHome(true);
         } else {
             failsCount++;
-            
+
             if (failsCount > 10) {
                 failsCount = 0;
                 arduino.SetAnyoneAtHome(false);
             }
         }
 
-        sleep(180);
+        sleep(30);
     }
 }
 
 int main() {
     auto arduino = Arduino(0x8);
 
-    std::thread pingThread(SendARPRequests, std::ref(arduino));
+    std::thread pingThread(SendARPPings, std::ref(arduino));
     pingThread.detach();
 
     performOperations(arduino);

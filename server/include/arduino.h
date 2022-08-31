@@ -33,13 +33,12 @@ namespace smart_led {
     protected:
         uint8_t _address;
         Pi2c _bus;
+        mutable std::shared_mutex _busWriteMutex;
 
         mutable DayPart dayPart = DayPart::Night;
 
-        mutable std::shared_mutex _mutex;
-
         mutable bool _anyoneAtHome = true;
-        mutable bool _cachedAnyoneAtHome = true;
+        mutable std::shared_mutex _anyoneAtHomeMutex;
 
         bool RequestIsOk() noexcept(false);
 

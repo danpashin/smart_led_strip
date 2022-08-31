@@ -3,8 +3,10 @@
 //
 
 #include "arduino.h"
+#include "helper.h"
 
 #include <mutex>
+#include <cstring>
 
 using namespace smart_led;
 
@@ -17,25 +19,33 @@ bool Arduino::RequestIsOk() noexcept(false) {
     Message response{};
     const int bytes_count = this->_bus.i2cRead(reinterpret_cast<char *>(&response), sizeof(response));
     if (bytes_count != sizeof(response)) {
-        throw std::runtime_error("Bus read error");
+        throw std::runtime_error(
+                string_format("I2C received %i bytes, expected %i; error = %s", bytes_count, sizeof(response),
+                              std::strerror(errno))
+        );
     }
 
     return response.command == SUCCESS;
 }
 
 bool Arduino::CheckConnect() noexcept(false) {
+    std::lock_guard lock(this->_busWriteMutex);
     Message msg{};
     msg.command = HELLO_QUERY;
 
     const int bytes_count = this->_bus.i2cWrite(reinterpret_cast<char *>(&msg), msg.length);
     if (bytes_count != msg.length) {
-        throw std::runtime_error("Bus write error");
+        throw std::runtime_error(
+                string_format("I2C send %i bytes, expected %i; error = %s", bytes_count, sizeof(msg.length),
+                              std::strerror(errno))
+        );
     }
 
     return this->RequestIsOk();
 }
 
 bool Arduino::SetColor(Color color) {
+    std::lock_guard lock(this->_busWriteMutex);
     Message msg{};
     msg.command = SET_COLOR;
 
@@ -54,26 +64,31 @@ bool Arduino::SetColor(Color color) {
 
     const int bytes_count = this->_bus.i2cWrite(reinterpret_cast<char *>(&msg), msg.length);
     if (bytes_count != msg.length) {
-        throw std::runtime_error("Bus write error");
+        throw std::runtime_error(
+                string_format("I2C send %i bytes, expected %i; error = %s", bytes_count, sizeof(msg.length),
+                              std::strerror(errno))
+        );
     }
 
     return this->RequestIsOk();
 }
 
 bool Arduino::SetDayPartColor(bool force) noexcept(false) {
+    static bool cachedAnyoneAtHome = false;
     const bool anyoneAtHome = this->AnyoneAtHome();
+
     if (!anyoneAtHome) {
-        if (anyoneAtHome != this->_cachedAnyoneAtHome) {
-            this->_cachedAnyoneAtHome = anyoneAtHome;
+        if (anyoneAtHome != cachedAnyoneAtHome) {
+            cachedAnyoneAtHome = anyoneAtHome;
             this->SetColor(Color::vantaBlack());
         }
 
         return true;
     }
 
-    if (anyoneAtHome != this->_cachedAnyoneAtHome) {
+    if (anyoneAtHome != cachedAnyoneAtHome) {
         force = true;
-        this->_cachedAnyoneAtHome = anyoneAtHome;
+        cachedAnyoneAtHome = anyoneAtHome;
     }
 
     const DayPart curDayPart = CurrentDayPart();
@@ -106,11 +121,11 @@ uint8_t Arduino::address() const {
 }
 
 void Arduino::SetAnyoneAtHome(bool anyoneAtHome) {
-    std::unique_lock lock(this->_mutex);
+    std::lock_guard lock(this->_anyoneAtHomeMutex);
     this->_anyoneAtHome = anyoneAtHome;
 }
 
 bool Arduino::AnyoneAtHome() {
-    std::shared_lock lock(this->_mutex);
+    std::shared_lock lock(this->_anyoneAtHomeMutex);
     return this->_anyoneAtHome;
 }
