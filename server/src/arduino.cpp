@@ -77,7 +77,9 @@ bool Arduino::SetDayPartColor(bool force) noexcept(false) {
     static bool cachedAnyoneAtHome = false;
     const bool anyoneAtHome = this->AnyoneAtHome();
 
+    // If there's no one at home - there's no need to set color at all
     if (!anyoneAtHome) {
+        // disable LED strips if someone left recently
         if (anyoneAtHome != cachedAnyoneAtHome) {
             cachedAnyoneAtHome = anyoneAtHome;
             this->SetColor(Color::vantaBlack());
@@ -86,11 +88,13 @@ bool Arduino::SetDayPartColor(bool force) noexcept(false) {
         return true;
     }
 
+    // and if someone came recently - force enable
     if (anyoneAtHome != cachedAnyoneAtHome) {
         force = true;
         cachedAnyoneAtHome = anyoneAtHome;
     }
 
+    // No need to set color again if it is already set
     const DayPart curDayPart = CurrentDayPart();
     if (curDayPart == this->dayPart && !force) {
         return true;

@@ -17,10 +17,12 @@ namespace smart_led {
     };
 
     struct Message {
-        // size of message in bytes. Default is the size of header.
+        /// Size of message in bytes. Default is the size of header.
         uint8_t length = sizeof(uint8_t) * 2;
+        /// Byte indicating which command is in the message. Has the size of 1 byte
         Command command = UNDEFINED;
-        uint8_t payload[30]{};
+        /// Payload with size of 30 bytes 'cause Arduino can't receive more
+        [[maybe_unused]] uint8_t payload[30]{};
     };
 }
 

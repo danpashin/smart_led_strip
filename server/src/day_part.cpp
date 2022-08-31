@@ -16,11 +16,11 @@ DayPart smart_led::CurrentDayPart() {
         return DayPart::Morning;
     }
 
-    if (hour >= 9 && hour <= 19) {
+    if (hour >= 9 && hour <= 21) {
         return DayPart::Day;
     }
 
-    if (hour >= 20 && hour <= 23) {
+    if (hour >= 22 && hour <= 23) {
         return DayPart::Evening;
     }
 
