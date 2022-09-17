@@ -21,11 +21,10 @@ pub fn generate_headers() -> ::std::io::Result<()> {
 /// `false` if running device has no IP allocated or no IPs responded
 #[safer_ffi::ffi_export]
 pub fn arp_ping_multiple<'a>(ips: c_slice::Mut<'a, char_p::Ref<'a>>, timeout_sec: u64) -> bool {
-    let client = ArpClient::new();
-    if client.is_err() {
-        return false;
-    }
-    let mut client = client.unwrap();
+    let mut client = match  ArpClient::new_with_iface_name("eth0") {
+        Ok(client) => client,
+        Err(_) => return false
+    };
 
     let ips: Vec<Ipv4Addr> = ips
         .iter()
