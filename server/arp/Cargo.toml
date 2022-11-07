@@ -13,7 +13,7 @@ lto = true
 strip = true
 
 [dependencies]
-arp-toolkit = { version = "0.3", features = ["sync"] }
+arp-toolkit = { git = "https://github.com/danpashin/arp-toolkit-rust", rev = "c28268d", features = ["sync"] }
 safer-ffi = "0.0.10"
 
 [features]

@@ -22,8 +22,7 @@ dependencies = [
 [[package]]
 name = "arp-toolkit"
 version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20000fc61f27001add94718bf1339194fe479f82c1fe84af5fb671986190783b"
+source = "git+https://github.com/danpashin/arp-toolkit-rust?rev=c28268d#c28268d887cfc8c796e46a3f4b699ae4304e9dea"
 dependencies = [
  "maybe-async",
  "num-derive",
