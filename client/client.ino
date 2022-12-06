@@ -7,13 +7,12 @@
 #include "color.h"
 #include "helper.h"
 #include "message.h"
+#include <FadeLed.h>
 
 const int kArduinoI2CAddress = 0x8;
 
-const int kRedLedPin = 3;
-const int kGreenLedPin = 5;
-const int kBlueLedPin = 6;
-const int kWhiteLedPin = 9;
+// Red, green, blue and white
+FadeLed rgbwLeds[4] = {3, 5, 6, 9};
 
 static Message request {};
 static Message response {};
@@ -26,13 +25,17 @@ void setup() {
   Wire.onReceive(I2CReceiveCallback);
   Wire.onRequest(I2CRequestCallback);
 
-  pinMode(kRedLedPin, OUTPUT);
-  pinMode(kGreenLedPin, OUTPUT);
-  pinMode(kBlueLedPin, OUTPUT);
-  pinMode(kWhiteLedPin, OUTPUT);
+  FadeLed::setInterval(10);
+  
+  for (int i; i < sizeof(rgbwLeds) / sizeof(*rgbwLeds); i++) {
+    rgbwLeds[i].noGammaTable();
+    rgbwLeds[i].setTime(5000, true);
+  }
 }
 
-void loop() { }
+void loop() {
+  FadeLed::update();
+}
 
 static void I2CReceiveCallback(int bytesReceived) {
   SerialPrintf("bytes_received: %i", bytesReceived);
@@ -69,10 +72,10 @@ static void ProcessMessage(Message message) {
 }
 
 static void SetColor(Color *color) {
-  analogWrite(kRedLedPin, color->rgb.red);
-  analogWrite(kGreenLedPin, color->rgb.green);
-  analogWrite(kBlueLedPin, color->rgb.blue);
-  analogWrite(kWhiteLedPin, color->white);
+  rgbwLeds[0].set(color->rgb.red);
+  rgbwLeds[1].set(color->rgb.green);
+  rgbwLeds[2].set(color->rgb.blue);
+  rgbwLeds[3].set(color->white);
 
   SerialPrintf("Set color with red = %i, green = %i, blue = %i, white = %i",
                color->rgb.red, color->rgb.green, color->rgb.blue, color->white);
