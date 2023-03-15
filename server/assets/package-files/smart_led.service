@@ -1,11 +1,11 @@
 [Unit]
 Description=Raspberry PI server to control arduino led strip
+After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/smart_led
+ExecStart=/usr/bin/smart_led --config /etc/smart_led/config.yaml
 Restart=always
-User=root
 
 [Install]
 WantedBy=multi-user.target

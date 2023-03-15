@@ -6,13 +6,18 @@
 #define SMART_LED_COLOR_H
 
 struct Color {
-  struct RGBColor {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-  } rgb;
+  uint8_t red;
+  uint8_t green;
+  uint8_t blue;
   uint8_t white;
 };
 
+bool operator == (const Color& lhs, const Color& rhs) {
+    return lhs.red == rhs.red && lhs.green == rhs.green && lhs.blue == rhs.blue && lhs.white == rhs.white;
+}
+
+bool operator != (const Color& lhs, const Color& rhs) {
+    return !(lhs == rhs);
+}
 
 #endif //SMART_LED_COLOR_H

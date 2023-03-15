@@ -10,13 +10,10 @@ I've always wanted to make my own home smart backlight. Firstly I've bought LED 
 
 ## How it works?
 
-The main project - *brains* - is running on Raspberry Pi 3B which is always connected to the router. There's also Arduino UNO which powers transistor's bases through it's 4 separate PWM. Arduino is connected to Raspberry Pi via I2C bus and receives different commands like health check or color set.
+The main project - *server* - is running on Raspberry Pi 3B which is always connected to the router. There's also Arduino UNO which powers transistor's bases through it's 4 separate PWM. Arduino is connected to Raspberry Pi via I2C bus and receives different commands like health check or color set.
 
-So, every 2 seconds RPi pings Arduino and if there's a response it sets color according to the part of the day - less brighter at morning and evening and full brightness at day. Concurrently it pings specified IPs in my local net and if there's no response it sends to arduino signal to switch off LED strips. If device responds again - LED strips are switched on again according to the days part. This way ensures the conservation of electricity when no one is at home and backlight is useless.
+So, every X seconds RPi pings Arduino and if there's a response it sets color according to the part of the day - less brighter at morning and evening and full brightness at day. Concurrently it pings specified IPs in my local net and if there's no response it sends to arduino signal to switch off LED strips. If device responds again - LED strips are switched on again according to the days part. This way ensures the conservation of electricity when no one is at home and backlight is useless.
 
-
-## Languages stack
-The main challenge I faced with - is that iPhone responds to ICMP pings only when it not being in sleeping state so I've started to ping it in another way by sending ARP requests but there's another question. I did't find any C++ library which can be integrated with two lines of code so I search Rust libs and found one! Therefore the main languages for this project are C++ and Rust.
 
 ## What's next?
 I don't know. I'd want to make backlight animation but it's a bit difficult as it needs to change transistor's voltage concurrently. However I've learned a lot along the current project state. It's been a cool week. 

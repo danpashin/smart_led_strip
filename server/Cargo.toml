@@ -1,0 +1,30 @@
+[package]
+name = "smart_led"
+description = "Raspberry PI server to control arduino led strip"
+license = "MIT"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip = true
+
+[dependencies]
+anyhow = "1.0.69"
+arp-toolkit = { git = "https://github.com/danpashin/arp-toolkit-rust", rev = "ea2f10f" }
+chrono = "0.4.24"
+clap = { version = "4.1.8", default-features = false, features = ["derive", "std", "help", "usage", "error-context"] }
+i2c = "0.1.0"
+i2cdev = "0.5.1"
+log = { version = "0.4.17", features = ["serde"] }
+pnet_datalink = "0.33.0"
+serde = { version = "1.0", default-features = false, features = ["std", "derive"] }
+serde_yaml = "0.9.19"
+simple_logger = "4.0.0"
+tokio = { version = "1.26.0", features = ["rt-multi-thread", "macros", "time"] }
+
+[build-dependencies]
+vergen = { version = "8.0.0-beta.7", features = ["build", "cargo", "rustc"] }

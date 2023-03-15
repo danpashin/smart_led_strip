@@ -1,0 +1,44 @@
+[env]
+AARCH64_COMPILER = { source = "${CARGO_MAKE_RUST_TARGET_TRIPLE}", default_value = "cross", mapping = {"aarch64-unknown-linux-gnu" = "cargo"}  }
+ASSETS_DIR = "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/assets"
+CARGO_BUILD_RELEASE_ARG = { value = "--release", condition = { profiles = ["release"] } }
+
+PACKAGE_IDENTIFIER = "${CARGO_MAKE_PROJECT_NAME}"
+PACKAGE_SECTION = "Utilities"
+PACKAGE_ARCHITECTURE = "aarch64"
+PACKAGE_HOMEPAGE = "https://github.com/danpashin/smart_led_strip"
+PACKAGE_AUTHOR = "danpashin"
+PACKAGE_FILE_NAME = "${PACKAGE_IDENTIFIER}_${CARGO_MAKE_CRATE_VERSION}_${PACKAGE_ARCHITECTURE}.pkg.tar.zst"
+PACKAGE_TARGET_FILE = "${CARGO_MAKE_CRATE_TARGET_DIRECTORY}/${PACKAGE_FILE_NAME}"
+
+[tasks.compile-linux-aarch64]
+command = "${AARCH64_COMPILER}"
+args = ["build", "@@remove-empty(CARGO_BUILD_RELEASE_ARG)", "--target", "aarch64-unknown-linux-gnu"]
+
+[tasks.create-package]
+command = "fpm"
+args = [
+    "--input-type", "dir",
+    "--output-type", "pacman",
+    "--force",
+    "--package", "${PACKAGE_TARGET_FILE}",
+    "--log", "warn",
+    "--name", "${PACKAGE_IDENTIFIER}",
+    "--category", "${PACKAGE_SECTION}",
+    "--architecture", "${PACKAGE_ARCHITECTURE}",
+    "--maintainer", "${PACKAGE_AUTHOR}",
+    "--description", "${CARGO_MAKE_CRATE_DESCRIPTION}",
+    "--version", "${CARGO_MAKE_CRATE_VERSION}",
+    "--license", "${CARGO_MAKE_CRATE_LICENSE}",
+    "--vendor", "",
+    "--url", "${PACKAGE_HOMEPAGE}",
+    "--after-install", "${ASSETS_DIR}/package-files/reload-systemd.sh",
+    "--after-remove", "${ASSETS_DIR}/package-files/reload-systemd.sh",
+
+    "${ASSETS_DIR}/etc-configs/=/etc/${PACKAGE_IDENTIFIER}",
+    "${ASSETS_DIR}/package-files/${PACKAGE_IDENTIFIER}.service=/usr/lib/systemd/system/${PACKAGE_IDENTIFIER}.service",
+    "${CARGO_MAKE_CRATE_TARGET_DIRECTORY}/aarch64-unknown-linux-gnu/${CARGO_MAKE_CARGO_PROFILE}/${CARGO_MAKE_PROJECT_NAME}=/usr/bin/${CARGO_MAKE_PROJECT_NAME}"
+]
+
+[tasks.build-linux-aarch64]
+dependencies = ["compile-linux-aarch64", "create-package"]
