@@ -40,7 +40,12 @@ pub(crate) struct ARPing {
 impl ARPing {
     pub(crate) fn new(config: Config) -> Result<Self> {
         let iface = match &config.interface {
-            Some(interface_name) => Interface::new_by_name(interface_name)?,
+            Some(interface_name) => {
+                Interface::new_by_name(interface_name).ok_or(std::io::Error::new(
+                    std::io::ErrorKind::NotConnected,
+                    "Could not get any network interface.",
+                ))?
+            }
             None => Interface::new()?,
         };
 
