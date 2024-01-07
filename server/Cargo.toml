@@ -13,18 +13,18 @@ panic = 'abort'
 strip = true
 
 [dependencies]
-anyhow = "1.0.70"
-arp-toolkit = { git = "https://github.com/danpashin/arp-toolkit-rust", rev = "163bc98" }
-chrono = "0.4.24"
-clap = { version = "4.2.1", default-features = false, features = ["derive", "std", "help", "usage", "error-context"] }
+anyhow = "1.0.79"
+arp-toolkit = "0.3.2"
+chrono = "0.4.31"
+clap = { version = "4.4.13", default-features = false, features = ["derive", "std", "help", "usage", "error-context"] }
 i2c = "0.1.0"
-i2cdev = "0.5.1"
-log = { version = "0.4.17", features = ["serde"] }
-pnet_datalink = "0.33.0"
-serde = { version = "1.0", default-features = false, features = ["std", "derive"] }
-serde_yaml = "0.9.21"
-simple_logger = "4.1.0"
-tokio = { version = "1.27.0", features = ["rt-multi-thread", "macros", "time"] }
+i2cdev = "0.6.0"
+log = { version = "0.4.20", features = ["serde"] }
+pnet_datalink = "0.34.0"
+serde = { version = "1.0.195", default-features = false, features = ["std", "derive"] }
+serde_yaml = "0.9.30"
+simple_logger = "4.3.3"
+tokio = { version = "1.35.1", features = ["rt-multi-thread", "macros", "time"] }
 
 [build-dependencies]
-vergen = { version = "8.1.1", features = ["build", "cargo", "rustc"] }
+vergen = { version = "8.2.6", features = ["build", "cargo", "rustc"] }
